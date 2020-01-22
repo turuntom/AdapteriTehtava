@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.SearchManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.view.View;
@@ -39,8 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //stringArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,lista);
-        
+
         dateArrayAdapter = new OmaAdapteri(MainActivity.this,R.layout.omaleiska, lista);
         
         listView = findViewById(R.id.listaViewi);
@@ -51,17 +51,30 @@ public class MainActivity extends AppCompatActivity {
 
 
         ab = new AlertDialog.Builder(this);
+        ab.setTitle("Datestamper");
+        ab.setMessage("Wanna add datestamp to list?");
+        ab.setCancelable(false);
 
+        ab.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dateArrayAdapter.add(new Date());
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
 
+        final AlertDialog alertDialog = ab.create();
 
         nappi = findViewById(R.id.button);
 
         View.OnClickListener kuuntelija = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Mainacitvity kuutenlija", Toast.LENGTH_SHORT).show();
-                dateArrayAdapter.add(new Date());
-
+                alertDialog.show();
             }
         };
 
