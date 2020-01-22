@@ -27,7 +27,6 @@ public class OmaAdapteri extends ArrayAdapter<Date> {
     private LayoutInflater layoutInflater;
 
     private TextView dateView;
-    private Button remove;
 
     private ArrayList<Date> dates;
 
@@ -48,9 +47,16 @@ public class OmaAdapteri extends ArrayAdapter<Date> {
         notifyDataSetChanged();
     }
 
+    @Override
+    public void remove(@Nullable Date object) {
+        super.remove(object);
+        dates.remove(object);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
 
         View view = layoutInflater.inflate(R.layout.omaleiska, parent, false);
@@ -59,39 +65,20 @@ public class OmaAdapteri extends ArrayAdapter<Date> {
         Date currentDate = dates.get(position);
 
         dateView.setText(currentDate.toString());
-        remove = (Button) view.findViewById(R.id.removeNappi);
-        remove.setOnClickListener(removeNapinKuuntelija);
+
+        ConstraintLayout cl = (ConstraintLayout) view;
+
+        Button remove = cl.findViewById(R.id.removeNappi);
+        remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                remove(dates.get(position));
+                notifyDataSetChanged();
+            }
+        });
+
         return view;
 
     }
-
-
-    View.OnClickListener removeNapinKuuntelija = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(context, "Oma adaptori kuuntelijea", Toast.LENGTH_SHORT).show();
-            dateView.setText("");
-            remove.setEnabled(false);
-        }
-    };
-
-    //public OmaAdapteri(@NonNull Context context, int resource, @NonNull List<String> objects){
-    //   super(context,resource,objects);
-    //   this.context = context;
-    //   this.dataset = (ArrayList<String>) objects;
-    // }
-
-    //@NonNull
-    //@Override
-    //public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent){
-    //LayoutInflater layoutInflater = LayoutInflater.from(context);
-    //View v = layoutInflater.inflate();
-
-    //LinearLayout linearLayout = (LinearLayout) v;
-    //Button b = (Button)linearLayout.findViewById(R.id.nappi);
-    //b.setOnClickListener();
-
-    //return linearLayout;
-    //}
 
 }
